@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="AppService/AppService.csproj" />
+  <Project Path="Common.Secuirty/Common.Secuirty.csproj" Id="55e111e9-603b-43aa-a06b-378f84c0e33f" />
+  <Project Path="PreSignedUrlAspire/PreSignedUrlAspire.csproj" Id="deea75e8-135d-4c9d-b467-fc575a0fe67d" />
+  <Project Path="StorageService/StorageService.csproj" />
+</Solution>

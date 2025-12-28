@@ -1,0 +1,30 @@
+# Secrets & config
+**/appsettings.json
+**/appsettings.*.json
+*.env
+
+# Certificates / keys
+*.pfx
+*.pem
+*.key
+*.crt
+
+# Logs
+*.log
+logs/
+
+# Build output
+bin/
+obj/
+
+# IDE
+.vs/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Visual Studio user files
+*.user
+*.slnLaunch.user

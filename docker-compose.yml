@@ -1,0 +1,76 @@
+﻿version: '3.8'
+
+services:
+  app-service:
+    image: app-service:latest
+    build:
+      context: .
+      dockerfile: AppService/Dockerfile
+    container_name: app-service
+    ports:
+      - "8000:8080"
+      - "8001:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - StorageService__BaseUrl=http://storage-service:8080 
+      - Signing__Secret=${SIGNING_SECRET}           
+      - Jwt__Secret=${JWT_SECRET}             
+      - Logging__LogLevel__Default=Information
+    volumes:
+      - ./aspnetapp.pfx:/https/aspnetapp.pfx:roStorageService__BaseUrl
+    networks:
+      - microservices-network
+    depends_on:
+      storage-service:
+        condition: service_started
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  storage-service:
+    image: storage-service:latest
+    build:
+      context: .
+      dockerfile: StorageService/Dockerfile
+    container_name: storage-service
+    ports:
+      - "8002:8080"
+      - "8003:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - StorageService__PublicBaseUrl=https://localhost:8003
+      - Signing__Secret=${SIGNING_SECRET}           
+      - Security__ExpiresIn=15
+      - Logging__LogLevel__Default=Information
+      - Storage__MaxFileSizeMB=10
+      - Storage__UploadPath=/app/uploads
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    volumes:
+      - storage-data:/app/uploads
+      - ./aspnetapp.pfx:/https/aspnetapp.pfx:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  
+
+ 
+networks:
+  microservices-network:
+    driver: bridge
+
+volumes:
+  storage-data:
+    driver: local
