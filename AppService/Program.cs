@@ -1,3 +1,4 @@
+using AppService.Data;
 using AppService.DbContext;
 using AppService.Exceptions;
 using AppService.Microservices.StorageService;
@@ -82,19 +83,7 @@ app.UseExceptionHandler();
 
 using (var scope = app.Services.CreateScope())
 {
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    await roleManager.CreateAsync(new IdentityRole("Seller"));
-    await roleManager.CreateAsync(new IdentityRole("User"));
-
-    var seller = new IdentityUser { UserName = "seller@test.com", Email = "seller@test.com" };
-    await userManager.CreateAsync(seller, "Password123!");
-    await userManager.AddToRoleAsync(seller, "seller");
-
-    var user = new IdentityUser { UserName = "user@test.com", Email = "user@test.com" };
-    await userManager.CreateAsync(user, "Password123!");
-    await userManager.AddToRoleAsync(user, "User");
+    await DataSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 if (app.Environment.IsDevelopment())
