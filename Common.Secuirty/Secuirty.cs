@@ -34,7 +34,7 @@ public static class Secuirty
     private static string CreateCanonicalPayload(Dictionary<string, string> metadata)
     {
         return string.Join("|", metadata.OrderBy(k => k.Key)
-                                        .Select(kvp => $"{kvp.Key}={kvp.Value}"));
+                                        .Select(kvp => $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}"));
     }
     private static string GenerateHmacSignature(string payload, string secretKey)
     {
