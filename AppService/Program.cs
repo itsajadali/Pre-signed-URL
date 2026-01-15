@@ -13,6 +13,8 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddRedisDistributedCache("cache");
+
 
 builder.Services.AddProblemDetails(configure =>
 {

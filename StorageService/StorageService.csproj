@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
   </ItemGroup>
   <ItemGroup>

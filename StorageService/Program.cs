@@ -14,6 +14,8 @@ builder.Services.AddProblemDetails(configure =>
 
 builder.Services.AddExceptionHandler<GlobalErrorExceptionHandler>();
 
+builder.AddRedisDistributedCache("cache");
+
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

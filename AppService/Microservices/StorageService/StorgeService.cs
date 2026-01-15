@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -16,11 +17,21 @@ public record GeneratePreSignedUrlResponse(string SignedUrl);
 
 public class StorgeService(IHttpClientFactory factoy,
                            JsonSerializerOptions jsonSerializerOptions,
-                           ILogger<StorgeService> logger) : IStorageService
+                           ILogger<StorgeService> logger,
+                           IDistributedCache cache) : IStorageService
 {
     public async Task<bool> CheckFileExistanceAsync(string fileId)
     {
         logger.LogInformation("Checking file existence for FileId: {FileId}", fileId);
+
+        var cacheKey = $"file:{fileId}";
+        var cached = await cache.GetAsync(cacheKey);
+
+        if (cached is not null)
+        {
+            logger.LogInformation("File found in cache for FileId: {FileId}", fileId);
+            return true;
+        }
 
         try
         {

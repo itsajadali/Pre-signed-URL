@@ -10,10 +10,10 @@ namespace AppService.Controllers;
 [ApiController]
 [Authorize(Roles = "Seller")]
 public class FilesController(IConfiguration configuration,
-                            IStorageService storgeService,
-                            ILogger<FilesController> logger) : ControllerBase
+                             IStorageService storgeService,
+                             ILogger<FilesController> logger) : ControllerBase
 {
-    private readonly string secretKey = configuration["Signing:Secret"];
+    private readonly string secretKey = configuration["Signing:Secret"]!;
 
 
     [HttpPost("RequestUploadUrl")]
@@ -42,7 +42,6 @@ public class FilesController(IConfiguration configuration,
                                                                              expiration));
 
         return Ok(presignedUrl);
-
     }
 
 }

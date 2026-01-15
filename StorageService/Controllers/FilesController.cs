@@ -18,16 +18,16 @@ public class FilesController(IFileStorageService storageService,
 
 
     [HttpHead("{fileId}")]
-    public ActionResult GetFile(string fileId)
+    public async Task<ActionResult> GetFile(string fileId, CancellationToken cancellationToken)
     {
-        if (storageService.FileExists(fileId))
+        if (await storageService.FileExistsAsync(fileId, cancellationToken))
             return Ok();
 
         return NotFound();
     }
 
     [HttpPost("UploadFile")]
-    public async Task<IActionResult> UploadFile([FromQuery] FileMetadata metadata, IFormFile file)
+    public async Task<IActionResult> UploadFile([FromQuery] FileMetadata metadata, IFormFile file, CancellationToken cancellationToken)
     {
         var dict = new Dictionary<string, string>
         {
@@ -43,7 +43,7 @@ public class FilesController(IFileStorageService storageService,
             return BadRequest("Invalid or expired signature.");
 
 
-        if (storageService.FileExists(metadata.Id))
+        if (await storageService.FileExistsAsync(metadata.Id, cancellationToken))
             return Conflict(new { message = $"A file with ID '{metadata.Id}' already exists." });
 
 

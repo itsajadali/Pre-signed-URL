@@ -2,6 +2,6 @@
 
 public interface IFileStorageService
 {
-    bool FileExists(string fileId);
-    Task<string> SaveFileAsync(IFormFile file, string fileId);
+    Task<bool> FileExistsAsync(string fileId, CancellationToken cancellationToken = default);
+    Task<string> SaveFileAsync(IFormFile file, string fileId, CancellationToken cancellationToken = default);
 }
